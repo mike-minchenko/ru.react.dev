@@ -1,53 +1,53 @@
 ---
-title: Choosing the State Structure
+title: Выбор структуры состояния
 ---
 
 <Intro>
 
-Structuring state well can make a difference between a component that is pleasant to modify and debug, and one that is a constant source of bugs. Here are some tips you should consider when structuring state.
+Грамотная структура состояния может стать ключевым фактором для компонента, который приятно модифицировать и отлаживать, в отличие от компонента, который постоянно вызывает проблемы. Вот несколько полезных советов, которые помогут вам организовать состояние с умом.
 
 </Intro>
 
 <YouWillLearn>
 
-* When to use a single vs multiple state variables
-* What to avoid when organizing state
-* How to fix common issues with the state structure
+* Когда следует использовать одну переменную состояния, а когда несколько
+* Чего следует избегать при организации состояния
+* Как можно устранить типичные проблемы, связанные с организацией состояния
 
 </YouWillLearn>
 
-## Principles for structuring state {/*principles-for-structuring-state*/}
+## Принципы организации состояния {/*principles-for-structuring-state*/}
 
-When you write a component that holds some state, you'll have to make choices about how many state variables to use and what the shape of their data should be. While it's possible to write correct programs even with a suboptimal state structure, there are a few principles that can guide you to make better choices:
+Когда вы создаете компонент, который содержит некоторое состояние, вам придется принять решения о том, сколько переменных состояния использовать и какой должна быть структура их данных. Хотя даже с неполной структурой состояния можно написать корректные программы, есть несколько принципов, которые помогут вам принимать более обдуманные решения:
 
-1. **Group related state.** If you always update two or more state variables at the same time, consider merging them into a single state variable.
-2. **Avoid contradictions in state.** When the state is structured in a way that several pieces of state may contradict and "disagree" with each other, you leave room for mistakes. Try to avoid this.
-3. **Avoid redundant state.** If you can calculate some information from the component's props or its existing state variables during rendering, you should not put that information into that component's state.
-4. **Avoid duplication in state.** When the same data is duplicated between multiple state variables, or within nested objects, it is difficult to keep them in sync. Reduce duplication when you can.
-5. **Avoid deeply nested state.** Deeply hierarchical state is not very convenient to update. When possible, prefer to structure state in a flat way.
+1. **Группируйте связанные состояния.** Если вы всегда обновляете две или более переменные состояния одновременно, рассмотрите возможность объединения их в одну переменную.
+2. **Избегайте противоречий в состоянии.**  Когда состояние структурировано таким образом, что несколько составляющих состояния могут противоречить и "не соглашаться" друг с другом, это открывает простор для ошибок. Старайтесь избегать таких ситуаций.
+3. **Избегайте избыточного состояния.** Если вы можете вычислить какую-то информацию из свойств компонента или уже существующих переменных состояния во время рендеринга, вам не следует помещать эту информацию в состояние компонента.
+4. **Избегайте дублирования состояния.** Когда одни и те же данные дублируются между несколькими переменными состояния или внутри вложенных объектов, сложно поддерживать их согласованность. Сокращайте дублирование, когда это возможно.
+5. **Избегайте глубокой вложенности состояния.** Глубоко иерархическое состояние не очень удобно обновлять. По возможности, структурируйте состояние в плоском виде.
 
-The goal behind these principles is to *make state easy to update without introducing mistakes*. Removing redundant and duplicate data from state helps ensure that all its pieces stay in sync. This is similar to how a database engineer might want to ["normalize" the database structure](https://docs.microsoft.com/en-us/office/troubleshoot/access/database-normalization-description) to reduce the chance of bugs. To paraphrase Albert Einstein, **"Make your state as simple as it can be--but no simpler."**
+Целью данных принципов является *упрощение процесса обновления состояния без возникновения ошибок*. Удаление избыточных и дублирующихся данных из состояния помогает гарантировать согласованность всех его компонентов. Это аналогично тому, как инженер баз данных стремится к ["нормализации" структуры базы данных](https://docs.microsoft.com/en-us/office/troubleshoot/access/database-normalization-description), чтобы минимизировать возможность ошибок. Перефразируя Альберта Эйнштейна, **"Сделайте своё состояние таким простым, как только возможно, но не проще."**
 
-Now let's see how these principles apply in action.
+Теперь давайте посмотрим, как эти принципы применяются на практике.
 
-## Group related state {/*group-related-state*/}
+## Группировка связанного состояния {/*group-related-state*/}
 
-You might sometimes be unsure between using a single or multiple state variables.
+Иногда возникает неопределенность относительно использования одной или нескольких переменных состояния.
 
-Should you do this?
+Стоит ли вам делать так?
 
 ```js
 const [x, setX] = useState(0);
 const [y, setY] = useState(0);
 ```
 
-Or this?
+Или так?
 
 ```js
 const [position, setPosition] = useState({ x: 0, y: 0 });
 ```
 
-Technically, you can use either of these approaches. But **if some two state variables always change together, it might be a good idea to unify them into a single state variable.** Then you won't forget to always keep them in sync, like in this example where moving the cursor updates both coordinates of the red dot:
+Технически вы можете использовать любой из этих подходов. Однако, **если две переменные состояния всегда изменяются вместе, возможно, имеет смысл объединить их в одну переменную состояния.** Таким образом, объединение их в одну переменную состояния позволит избежать проблем с их синхронизацией, как в этом примере, где перемещение курсора обновляет обе координаты красной точки:
 
 <Sandpack>
 
@@ -93,11 +93,11 @@ body { margin: 0; padding: 0; height: 250px; }
 
 </Sandpack>
 
-Another case where you'll group data into an object or an array is when you don't know how many pieces of state you'll need. For example, it's helpful when you have a form where the user can add custom fields.
+Еще одна ситуация, когда имеет смысл объединять данные в объект или массив, возникает, когда вы не знаете, сколько состояний понадобится. Например, это может быть полезно в случае формы, где пользователь может добавлять настраиваемые поля.
 
 <Pitfall>
 
-If your state variable is an object, remember that [you can't update only one field in it](/learn/updating-objects-in-state) without explicitly copying the other fields. For example, you can't do `setPosition({ x: 100 })` in the above example because it would not have the `y` property at all! Instead, if you wanted to set `x` alone, you would either do `setPosition({ ...position, x: 100 })`, or split them into two state variables and do `setX(100)`.
+Если ваше состояние представлено объектом, помните, что [что вы не можете обновить только одно поле в нем](/learn/updating-objects-in-state), не скопировав явно остальные поля. Например, вы не можете просто использовать `setPosition({ x: 100 })` в приведенном примере, поскольку оно не будет содержать свойство `y`! IВместо этого, если вы хотите установить только значение `x`, вам нужно использовать `setPosition({ ...position, x: 100 })`, либо разделить состояние на две переменные и использовать `setX(100)`.
 
 </Pitfall>
 
@@ -458,7 +458,7 @@ export default function Menu() {
 
   return (
     <>
-      <h2>What's your travel snack?</h2> 
+      <h2>What's your travel snack?</h2>
       <ul>
         {items.map((item, index) => (
           <li key={item.id}>
@@ -810,7 +810,7 @@ export const initialTravelPlan = {
     }, {
       id: 49,
       title: 'Green Hill',
-      childPlaces: []      
+      childPlaces: []
     }]
   }]
 };
@@ -888,7 +888,7 @@ export const initialTravelPlan = {
     id: 2,
     title: 'Africa',
     childIds: [3, 4, 5, 6 , 7, 8, 9]
-  }, 
+  },
   3: {
     id: 3,
     title: 'Botswana',
@@ -908,7 +908,7 @@ export const initialTravelPlan = {
     id: 6,
     title: 'Madagascar',
     childIds: []
-  }, 
+  },
   7: {
     id: 7,
     title: 'Morocco',
@@ -927,7 +927,7 @@ export const initialTravelPlan = {
   10: {
     id: 10,
     title: 'Americas',
-    childIds: [11, 12, 13, 14, 15, 16, 17, 18],   
+    childIds: [11, 12, 13, 14, 15, 16, 17, 18],
   },
   11: {
     id: 11,
@@ -943,7 +943,7 @@ export const initialTravelPlan = {
     id: 13,
     title: 'Barbados',
     childIds: []
-  }, 
+  },
   14: {
     id: 14,
     title: 'Canada',
@@ -972,7 +972,7 @@ export const initialTravelPlan = {
   19: {
     id: 19,
     title: 'Asia',
-    childIds: [20, 21, 22, 23, 24, 25, 26],   
+    childIds: [20, 21, 22, 23, 24, 25, 26],
   },
   20: {
     id: 20,
@@ -1012,7 +1012,7 @@ export const initialTravelPlan = {
   27: {
     id: 27,
     title: 'Europe',
-    childIds: [28, 29, 30, 31, 32, 33, 34],   
+    childIds: [28, 29, 30, 31, 32, 33, 34],
   },
   28: {
     id: 28,
@@ -1052,7 +1052,7 @@ export const initialTravelPlan = {
   35: {
     id: 35,
     title: 'Oceania',
-    childIds: [36, 37, 38, 39, 40, 41, 42],   
+    childIds: [36, 37, 38, 39, 40, 41, 42],
   },
   36: {
     id: 36,
@@ -1229,7 +1229,7 @@ export const initialTravelPlan = {
     id: 2,
     title: 'Africa',
     childIds: [3, 4, 5, 6 , 7, 8, 9]
-  }, 
+  },
   3: {
     id: 3,
     title: 'Botswana',
@@ -1249,7 +1249,7 @@ export const initialTravelPlan = {
     id: 6,
     title: 'Madagascar',
     childIds: []
-  }, 
+  },
   7: {
     id: 7,
     title: 'Morocco',
@@ -1268,7 +1268,7 @@ export const initialTravelPlan = {
   10: {
     id: 10,
     title: 'Americas',
-    childIds: [11, 12, 13, 14, 15, 16, 17, 18],   
+    childIds: [11, 12, 13, 14, 15, 16, 17, 18],
   },
   11: {
     id: 11,
@@ -1284,7 +1284,7 @@ export const initialTravelPlan = {
     id: 13,
     title: 'Barbados',
     childIds: []
-  }, 
+  },
   14: {
     id: 14,
     title: 'Canada',
@@ -1313,7 +1313,7 @@ export const initialTravelPlan = {
   19: {
     id: 19,
     title: 'Asia',
-    childIds: [20, 21, 22, 23, 24, 25, 26],   
+    childIds: [20, 21, 22, 23, 24, 25, 26],
   },
   20: {
     id: 20,
@@ -1353,7 +1353,7 @@ export const initialTravelPlan = {
   27: {
     id: 27,
     title: 'Europe',
-    childIds: [28, 29, 30, 31, 32, 33, 34],   
+    childIds: [28, 29, 30, 31, 32, 33, 34],
   },
   28: {
     id: 28,
@@ -1393,7 +1393,7 @@ export const initialTravelPlan = {
   35: {
     id: 35,
     title: 'Oceania',
-    childIds: [36, 37, 38, 39, 40, 41,, 42],   
+    childIds: [36, 37, 38, 39, 40, 41,, 42],
   },
   36: {
     id: 36,
@@ -1573,7 +1573,7 @@ export const initialTravelPlan = {
     id: 2,
     title: 'Africa',
     childIds: [3, 4, 5, 6 , 7, 8, 9]
-  }, 
+  },
   3: {
     id: 3,
     title: 'Botswana',
@@ -1593,7 +1593,7 @@ export const initialTravelPlan = {
     id: 6,
     title: 'Madagascar',
     childIds: []
-  }, 
+  },
   7: {
     id: 7,
     title: 'Morocco',
@@ -1612,7 +1612,7 @@ export const initialTravelPlan = {
   10: {
     id: 10,
     title: 'Americas',
-    childIds: [11, 12, 13, 14, 15, 16, 17, 18],   
+    childIds: [11, 12, 13, 14, 15, 16, 17, 18],
   },
   11: {
     id: 11,
@@ -1628,7 +1628,7 @@ export const initialTravelPlan = {
     id: 13,
     title: 'Barbados',
     childIds: []
-  }, 
+  },
   14: {
     id: 14,
     title: 'Canada',
@@ -1657,7 +1657,7 @@ export const initialTravelPlan = {
   19: {
     id: 19,
     title: 'Asia',
-    childIds: [20, 21, 22, 23, 24, 25, 26],   
+    childIds: [20, 21, 22, 23, 24, 25, 26],
   },
   20: {
     id: 20,
@@ -1697,7 +1697,7 @@ export const initialTravelPlan = {
   27: {
     id: 27,
     title: 'Europe',
-    childIds: [28, 29, 30, 31, 32, 33, 34],   
+    childIds: [28, 29, 30, 31, 32, 33, 34],
   },
   28: {
     id: 28,
@@ -1737,7 +1737,7 @@ export const initialTravelPlan = {
   35: {
     id: 35,
     title: 'Oceania',
-    childIds: [36, 37, 38, 39, 40, 41,, 42],   
+    childIds: [36, 37, 38, 39, 40, 41,, 42],
   },
   36: {
     id: 36,
@@ -1842,7 +1842,7 @@ Sometimes, you can also reduce state nesting by moving some of the nested state 
 
 <Recap>
 
-* If two state variables always update together, consider merging them into one. 
+* If two state variables always update together, consider merging them into one.
 * Choose your state variables carefully to avoid creating "impossible" states.
 * Structure your state in a way that reduces the chances that you'll make a mistake updating it.
 * Avoid redundant and duplicate state so that you don't need to keep it in sync.
@@ -2081,7 +2081,7 @@ export default function TravelPlan() {
   }
 
   return (
-    <>  
+    <>
       <AddItem
         onAddItem={handleAddItem}
       />
@@ -2216,7 +2216,7 @@ export default function TravelPlan() {
   }
 
   return (
-    <>  
+    <>
       <AddItem
         onAddItem={handleAddItem}
       />
@@ -2369,7 +2369,7 @@ export default function Letter({
         isHighlighted ? 'highlighted' : ''
       }
       onFocus={() => {
-        onHover(letter);        
+        onHover(letter);
       }}
       onPointerMove={() => {
         onHover(letter);
@@ -2478,7 +2478,7 @@ export default function Letter({
         isHighlighted ? 'highlighted' : ''
       }
       onFocus={() => {
-        onHover(letter.id);        
+        onHover(letter.id);
       }}
       onPointerMove={() => {
         onHover(letter.id);
