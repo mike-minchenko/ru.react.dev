@@ -112,7 +112,7 @@ Read **[Reacting to Input with State](/learn/reacting-to-input-with-state)** to 
 
 </LearnMore>
 
-## Choosing the state structure {/*choosing-the-state-structure*/}
+## Выбор структуры состояния {/*choosing-the-state-structure*/}
 
 Structuring state well can make a difference between a component that is pleasant to modify and debug, and one that is a constant source of bugs. The most important principle is that state shouldn't contain redundant or duplicated information. If there's unnecessary state, it's easy to forget to update it, and introduce bugs!
 
@@ -225,7 +225,7 @@ This might seem like a small change, but many bugs in React apps are fixed this 
 
 <LearnMore path="/learn/choosing-the-state-structure">
 
-Read **[Choosing the State Structure](/learn/choosing-the-state-structure)** to learn how to design the state shape to avoid bugs.
+Read **[Выбор структуры состояния](/learn/choosing-the-state-structure)** to learn how to design the state shape to avoid bugs.
 
 </LearnMore>
 
