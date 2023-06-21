@@ -26,7 +26,7 @@ title: Выбор структуры состояния
 4. **Избегайте дублирования состояния.** Когда одни и те же данные дублируются между несколькими переменными состояния или внутри вложенных объектов, сложно поддерживать их согласованность. Сокращайте дублирование, когда это возможно.
 5. **Избегайте глубокой вложенности состояния.** Глубоко иерархическое состояние не очень удобно обновлять. По возможности, структурируйте состояние в плоском виде.
 
-Целью данных принципов является *упрощение процесса обновления состояния без возникновения ошибок*. Удаление избыточных и дублирующихся данных из состояния помогает гарантировать согласованность всех его компонентов. Это аналогично тому, как инженер баз данных стремится к ["нормализации" структуры базы данных](https://docs.microsoft.com/en-us/office/troubleshoot/access/database-normalization-description), чтобы минимизировать возможность ошибок. Перефразируя Альберта Эйнштейна, **"Сделайте своё состояние таким простым, как только возможно, но не проще."**
+Целью данных принципов является *упрощение процесса обновления состояния без возникновения ошибок*. Удаление избыточных и дублирующихся данных из состояния помогает гарантировать согласованность всех его компонентов. Это аналогично тому, как инженер баз данных стремится к ["нормализации" структуры базы данных](https://learn.microsoft.com/ru-ru/office/troubleshoot/access/database-normalization-description), чтобы минимизировать возможность ошибок. Перефразируя Альберта Эйнштейна, **"Сделайте своё состояние таким простым, как только возможно, но не проще."**
 
 Теперь давайте посмотрим, как эти принципы применяются на практике.
 
@@ -101,9 +101,9 @@ body { margin: 0; padding: 0; height: 250px; }
 
 </Pitfall>
 
-## Avoid contradictions in state {/*avoid-contradictions-in-state*/}
+## Избегайте противоречий в состоянии {/*avoid-contradictions-in-state*/}
 
-Here is a hotel feedback form with `isSending` and `isSent` state variables:
+Вот форма обратной связи отеля с переменными состояния `isSending` и `isSent`:
 
 <Sandpack>
 
@@ -124,12 +124,12 @@ export default function FeedbackForm() {
   }
 
   if (isSent) {
-    return <h1>Thanks for feedback!</h1>
+    return <h1>Спасибо за обратную связь!</h1>
   }
 
   return (
     <form onSubmit={handleSubmit}>
-      <p>How was your stay at The Prancing Pony?</p>
+      <p>Как прошло ваше пребывание в отеле "The Prancing Pony"?</p>
       <textarea
         disabled={isSending}
         value={text}
@@ -140,14 +140,14 @@ export default function FeedbackForm() {
         disabled={isSending}
         type="submit"
       >
-        Send
+        Отправить
       </button>
-      {isSending && <p>Sending...</p>}
+      {isSending && <p>Отправка...</p>}
     </form>
   );
 }
 
-// Pretend to send a message.
+// Имитируем отправку сообщения.
 function sendMessage(text) {
   return new Promise(resolve => {
     setTimeout(resolve, 2000);
@@ -157,9 +157,9 @@ function sendMessage(text) {
 
 </Sandpack>
 
-While this code works, it leaves the door open for "impossible" states. For example, if you forget to call `setIsSent` and `setIsSending` together, you may end up in a situation where both `isSending` and `isSent` are `true` at the same time. The more complex your component is, the harder it is to understand what happened.
+Хотя этот код работает, он открывает возможность для "невозможных" состояний. Например, если вы забудете вызвать `setIsSent` и `setIsSending` одновременно, может возникнуть ситуация, когда и `isSending`, и `isSent` одновременно будут равны `true`. Чем сложнее ваш компонент, тем сложнее понять, что произошло.
 
-**Since `isSending` and `isSent` should never be `true` at the same time, it is better to replace them with one `status` state variable that may take one of *three* valid states:** `'typing'` (initial), `'sending'`, and `'sent'`:
+**Поскольку `isSending` и `isSent` не должны быть одновременно равны `true`, лучше заменить их одной переменной состояния `status`, которая может принимать одно из *трех* допустимых состояний:** `'typing'` (начальное), `'sending'` и `'sent'`:
 
 <Sandpack>
 
@@ -186,7 +186,7 @@ export default function FeedbackForm() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <p>How was your stay at The Prancing Pony?</p>
+      <p>Как прошло ваше пребывание в отеле "The Prancing Pony"?</p>
       <textarea
         disabled={isSending}
         value={text}
@@ -197,14 +197,14 @@ export default function FeedbackForm() {
         disabled={isSending}
         type="submit"
       >
-        Send
+        Отправить
       </button>
-      {isSending && <p>Sending...</p>}
+      {isSending && <p>Отправка...</p>}
     </form>
   );
 }
 
-// Pretend to send a message.
+// Имитируем отправку сообщения.
 function sendMessage(text) {
   return new Promise(resolve => {
     setTimeout(resolve, 2000);
@@ -214,20 +214,20 @@ function sendMessage(text) {
 
 </Sandpack>
 
-You can still declare some constants for readability:
+Вы можете объявить константы для удобства чтения:
 
 ```js
 const isSending = status === 'sending';
 const isSent = status === 'sent';
 ```
 
-But they're not state variables, so you don't need to worry about them getting out of sync with each other.
+Они не являются переменными состояния, поэтому вам не нужно беспокоиться о том, что они не синхронизируются друг с другом.
 
-## Avoid redundant state {/*avoid-redundant-state*/}
+## Избегайте избыточного состояния {/*avoid-redundant-state*/}
 
-If you can calculate some information from the component's props or its existing state variables during rendering, you **should not** put that information into that component's state.
+Если вы можете вычислить некоторую информацию на основе пропсов компонента или уже имеющихся переменных состояния во время процесса рендеринга, **не следует** сохранять эту информацию в состоянии компонента.
 
-For example, take this form. It works, but can you find any redundant state in it?
+Например, рассмотрим эту форму. Она работает, но можете ли вы найти избыточное состояние в ней?
 
 <Sandpack>
 
@@ -251,23 +251,23 @@ export default function Form() {
 
   return (
     <>
-      <h2>Let’s check you in</h2>
+      <h2>Давайте вас зарегистрируем</h2>
       <label>
-        First name:{' '}
+        Имя:{' '}
         <input
           value={firstName}
           onChange={handleFirstNameChange}
         />
       </label>
       <label>
-        Last name:{' '}
+        Фамилия:{' '}
         <input
           value={lastName}
           onChange={handleLastNameChange}
         />
       </label>
       <p>
-        Your ticket will be issued to: <b>{fullName}</b>
+        Ваш билет будет оформлен на: <b>{fullName}</b>
       </p>
     </>
   );
@@ -280,9 +280,9 @@ label { display: block; margin-bottom: 5px; }
 
 </Sandpack>
 
-This form has three state variables: `firstName`, `lastName`, and `fullName`. However, `fullName` is redundant. **You can always calculate `fullName` from `firstName` and `lastName` during render, so remove it from state.**
+Эта форма имеет три переменные состояния: `firstName`, `lastName`, и `fullName`. Однако переменная `fullName` является избыточной. **Во время рендеринга всегда можно вычислить `fullName` на основе `firstName` и `lastName` поэтому её можно удалить из состояния.**
 
-This is how you can do it:
+Вот как можно это сделать:
 
 <Sandpack>
 
@@ -305,23 +305,23 @@ export default function Form() {
 
   return (
     <>
-      <h2>Let’s check you in</h2>
+      <h2>Давайте вас зарегистрируем</h2>
       <label>
-        First name:{' '}
+        Имя:{' '}
         <input
           value={firstName}
           onChange={handleFirstNameChange}
         />
       </label>
       <label>
-        Last name:{' '}
+        Фамилия:{' '}
         <input
           value={lastName}
           onChange={handleLastNameChange}
         />
       </label>
       <p>
-        Your ticket will be issued to: <b>{fullName}</b>
+        Ваш билет будет оформлен на: <b>{fullName}</b>
       </p>
     </>
   );
@@ -334,42 +334,42 @@ label { display: block; margin-bottom: 5px; }
 
 </Sandpack>
 
-Here, `fullName` is *not* a state variable. Instead, it's calculated during render:
+В данном случае `fullName` *не* является переменной состояния. Вместо этого она вычисляется во время рендеринга:
 
 ```js
 const fullName = firstName + ' ' + lastName;
 ```
 
-As a result, the change handlers don't need to do anything special to update it. When you call `setFirstName` or `setLastName`, you trigger a re-render, and then the next `fullName` will be calculated from the fresh data.
+В результате обработчикам изменений не нужно выполнять никаких дополнительных действий для обновления `fullName`. Когда вы вызываете `setFirstName` или `setLastName`, происходит повторный рендеринг, и следующее значение `fullName` будет вычислено на основе новых данных.
 
 <DeepDive>
 
-#### Don't mirror props in state {/*don-t-mirror-props-in-state*/}
+#### Не дублируйте свойства в состоянии {/*don-t-mirror-props-in-state*/}
 
-A common example of redundant state is code like this:
+Одним из распространенных примеров избыточного состояния является следующий код:
 
 ```js
 function Message({ messageColor }) {
   const [color, setColor] = useState(messageColor);
 ```
 
-Here, a `color` state variable is initialized to the `messageColor` prop. The problem is that **if the parent component passes a different value of `messageColor` later (for example, `'red'` instead of `'blue'`), the `color` *state variable* would not be updated!** The state is only initialized during the first render.
+Здесь переменная состояния `color` инициализируется значением свойства `messageColor`. Проблема в том, что **если родительский компонент позднее передаст другое значение `messageColor` (например, `'red'` вместо `'blue'`), *переменная состояния* `color` не будет обновлена!** Состояние инициализируется только во время первого рендера.
 
-This is why "mirroring" some prop in a state variable can lead to confusion. Instead, use the `messageColor` prop directly in your code. If you want to give it a shorter name, use a constant:
+Вот почему "дублирование" какого-либо свойства в переменной состояния может привести к путанице. Вместо этого используйте свойство `messageColor` непосредственно в своем коде. Если вы хотите дать ему более короткое имя, используйте константу:
 
 ```js
 function Message({ messageColor }) {
   const color = messageColor;
 ```
 
-This way it won't get out of sync with the prop passed from the parent component.
+Таким образом, значение не будет расходиться с переданным свойством от родительского компонента.
 
-"Mirroring" props into state only makes sense when you *want* to ignore all updates for a specific prop. By convention, start the prop name with `initial` or `default` to clarify that its new values are ignored:
+"Дублирование" свойств в состояние имеет смысл только тогда, когда вы *хотите* игнорировать все обновления для определенного свойства. По соглашению, начните имя свойства с `initial` или `default`, чтобы ясно указать, что его новые значения игнорируются:
 
 ```js
 function Message({ initialColor }) {
-  // The `color` state variable holds the *first* value of `initialColor`.
-  // Further changes to the `initialColor` prop are ignored.
+  // Переменная состояния `color` хранит *первоначальное* значение `initialColor`.
+  // Дальнейшие изменения свойства `initialColor` игнорируются.
   const [color, setColor] = useState(initialColor);
 ```
 
