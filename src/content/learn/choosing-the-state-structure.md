@@ -34,7 +34,7 @@ title: Выбор структуры состояния
 
 Иногда возникает неопределенность относительно использования одной или нескольких переменных состояния.
 
-Стоит ли вам делать так?
+Стоит ли вам сделать так?
 
 ```js
 const [x, setX] = useState(0);
@@ -1478,9 +1478,9 @@ button { margin: 10px; }
 
 <DeepDive>
 
-#### Improving memory usage {/*improving-memory-usage*/}
+#### Улучшение использования памяти {/*improving-memory-usage*/}
 
-Ideally, you would also remove the deleted items (and their children!) from the "table" object to improve memory usage. This version does that. It also [uses Immer](/learn/updating-objects-in-state#write-concise-update-logic-with-immer) to make the update logic more concise.
+Идеально было бы также исключить удаленные элементы (и их потомков!) из объекта "table", чтобы улучшить использование памяти. В этой версии это сделано. Кроме того, [используется Immer](/learn/updating-objects-in-state#write-concise-update-logic-with-immer), чтобы сделать логику обновления более лаконичной.
 
 <Sandpack>
 
@@ -1493,12 +1493,12 @@ export default function TravelPlan() {
 
   function handleComplete(parentId, childId) {
     updatePlan(draft => {
-      // Remove from the parent place's child IDs.
+      // Удаляем дочерние ID из родительских мест.
       const parent = draft[parentId];
       parent.childIds = parent.childIds
         .filter(id => id !== childId);
 
-      // Forget this place and all its subtree.
+      // Удаляем место и всё его поддерево.
       deleteAllChildren(childId);
       function deleteAllChildren(id) {
         const place = draft[id];
@@ -1512,7 +1512,7 @@ export default function TravelPlan() {
   const planetIds = root.childIds;
   return (
     <>
-      <h2>Places to visit</h2>
+      <h2>Места, которые нужно посетить</h2>
       <ol>
         {planetIds.map(id => (
           <PlaceTree
@@ -1537,7 +1537,7 @@ function PlaceTree({ id, parentId, placesById, onComplete }) {
       <button onClick={() => {
         onComplete(parentId, id);
       }}>
-        Complete
+        Завершить
       </button>
       {childIds.length > 0 &&
         <ol>
@@ -1838,25 +1838,24 @@ button { margin: 10px; }
 
 </DeepDive>
 
-Sometimes, you can also reduce state nesting by moving some of the nested state into the child components. This works well for ephemeral UI state that doesn't need to be stored, like whether an item is hovered.
+Иногда вы можете уменьшить вложенность состояния, переместив часть вложенного состояния в дочерние компоненты. Это хорошо работает для временного состояния UI, которое не требует сохранения, например, состояние наведения на элемент.
 
 <Recap>
 
-* If two state variables always update together, consider merging them into one.
-* Choose your state variables carefully to avoid creating "impossible" states.
-* Structure your state in a way that reduces the chances that you'll make a mistake updating it.
-* Avoid redundant and duplicate state so that you don't need to keep it in sync.
-* Don't put props *into* state unless you specifically want to prevent updates.
-* For UI patterns like selection, keep ID or index in state instead of the object itself.
-* If updating deeply nested state is complicated, try flattening it.
-
+* Если две переменные состояния всегда обновляются вместе, рассмотрите возможность объединить их в одну.
+* Тщательно выбирайте переменные состояния, чтобы избежать создания "невозможных" состояний.
+* Структурируйте состояние таким образом, чтобы уменьшить вероятность ошибок при его обновлении.
+* Избегайте избыточных и дублирующих состояний, чтобы не нужно было их синхронизировать.
+* Не помещайте пропсы *в состояние*, если только вы специально не хотите предотвратить обновления.
+* Для UI-паттернов, таких как выбор, храните в состоянии идентификатор или индекс, а не сам объект.
+* Если обновление глубоко вложенного состояния усложняется, попробуйте упростить его структуру.
 </Recap>
 
 <Challenges>
 
-#### Fix a component that's not updating {/*fix-a-component-thats-not-updating*/}
+#### Исправьте компонент, который не обновляется {/*fix-a-component-thats-not-updating*/}
 
-This `Clock` component receives two props: `color` and `time`. When you select a different color in the select box, the `Clock` component receives a different `color` prop from its parent component. However, for some reason, the displayed color doesn't update. Why? Fix the problem.
+Компонент `Clock` принимает два пропса: `color` и `time`. Когда вы выбираете другой цвет в выпадающем списке, компонент `Clock` получает новое значение `color` от родительского компонента. Однако, по какой-то причине отображаемый цвет не обновляется. Почему? Исправьте проблему.
 
 <Sandpack>
 
@@ -1894,7 +1893,7 @@ export default function App() {
   return (
     <div>
       <p>
-        Pick a color:{' '}
+        Выберите цвет:{' '}
         <select value={color} onChange={e => setColor(e.target.value)}>
           <option value="lightcoral">lightcoral</option>
           <option value="midnightblue">midnightblue</option>
@@ -1911,7 +1910,7 @@ export default function App() {
 
 <Solution>
 
-The issue is that this component has `color` state initialized with the initial value of the `color` prop. But when the `color` prop changes, this does not affect the state variable! So they get out of sync. To fix this issue, remove the state variable altogether, and use the `color` prop directly.
+Проблема заключается в том, что этот компонент имеет состояние `color`, которое инициализируется начальным значением пропcа `color`. Однако, когда значение пропcа `color` изменяется, это не отражается на состоянии компонента, и они перестают синхронизироваться. Чтобы исправить эту проблему, удалите переменную состояния `color` полностью и используйте проп `color` напрямую.
 
 <Sandpack>
 
@@ -1948,7 +1947,7 @@ export default function App() {
   return (
     <div>
       <p>
-        Pick a color:{' '}
+        Выберите цвет:{' '}
         <select value={color} onChange={e => setColor(e.target.value)}>
           <option value="lightcoral">lightcoral</option>
           <option value="midnightblue">midnightblue</option>
@@ -1963,7 +1962,7 @@ export default function App() {
 
 </Sandpack>
 
-Or, using the destructuring syntax:
+Или, используя синтаксис деструктуризации:
 
 <Sandpack>
 
@@ -2000,7 +1999,7 @@ export default function App() {
   return (
     <div>
       <p>
-        Pick a color:{' '}
+        Выберите цвет:{' '}
         <select value={color} onChange={e => setColor(e.target.value)}>
           <option value="lightcoral">lightcoral</option>
           <option value="midnightblue">midnightblue</option>
