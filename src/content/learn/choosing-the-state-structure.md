@@ -2016,13 +2016,13 @@ export default function App() {
 
 </Solution>
 
-#### Fix a broken packing list {/*fix-a-broken-packing-list*/}
+#### Исправьте сломанный список вещей {/*fix-a-broken-packing-list*/}
 
-This packing list has a footer that shows how many items are packed, and how many items there are overall. It seems to work at first, but it is buggy. For example, if you mark an item as packed and then delete it, the counter will not be updated correctly. Fix the counter so that it's always correct.
+Этот список вещей имеет нижний колонтитул, который показывает, сколько предметов упаковано и сколько всего предметов есть. На первый взгляд, он работает, но есть некоторые ошибки. Например, если отметить предмет как упакованный, а затем удалить его, счетчик не будет корректно обновлён. Исправьте счётчик, чтобы он показывал правильные значения.
 
 <Hint>
 
-Is any state in this example redundant?
+Является ли какое-либо состояние в этом примере лишним?
 
 </Hint>
 
@@ -2035,9 +2035,9 @@ import PackingList from './PackingList.js';
 
 let nextId = 3;
 const initialItems = [
-  { id: 0, title: 'Warm socks', packed: true },
-  { id: 1, title: 'Travel journal', packed: false },
-  { id: 2, title: 'Watercolors', packed: false },
+  { id: 0, title: 'Тёплые носки', packed: true },
+  { id: 1, title: 'Туристический журнал', packed: false },
+  { id: 2, title: 'Акварель', packed: false },
 ];
 
 export default function TravelPlan() {
@@ -2090,7 +2090,7 @@ export default function TravelPlan() {
         onDeleteItem={handleDeleteItem}
       />
       <hr />
-      <b>{packed} out of {total} packed!</b>
+      <b>{packed} из {total} упаковано!</b>
     </>
   );
 }
@@ -2104,14 +2104,14 @@ export default function AddItem({ onAddItem }) {
   return (
     <>
       <input
-        placeholder="Add item"
+        placeholder="Добавить пункт"
         value={title}
         onChange={e => setTitle(e.target.value)}
       />
       <button onClick={() => {
         setTitle('');
         onAddItem(title);
-      }}>Add</button>
+      }}>Добавить</button>
     </>
   )
 }
@@ -2144,7 +2144,7 @@ export default function PackingList({
             {item.title}
           </label>
           <button onClick={() => onDeleteItem(item.id)}>
-            Delete
+            Удалить
           </button>
         </li>
       ))}
@@ -2163,7 +2163,7 @@ ul, li { margin: 0; padding: 0; }
 
 <Solution>
 
-Although you could carefully change each event handler to update the `total` and `packed` counters correctly, the root problem is that these state variables exist at all. They are redundant because you can always calculate the number of items (packed or total) from the `items` array itself. Remove the redundant state to fix the bug:
+Хотя вы можете изменить каждый обработчик событий, чтобы правильно обновлять счетчики `total` и `packed`, основная проблема заключается в самом существовании этих переменных состояния. Они являются избыточными, поскольку всегда можно вычислить количество элементов (упакованных или общих) из массива `items` самостоятельно. Чтобы исправить ошибку, удалите лишнее состояние.
 
 <Sandpack>
 
@@ -2174,10 +2174,10 @@ import PackingList from './PackingList.js';
 
 let nextId = 3;
 const initialItems = [
-  { id: 0, title: 'Warm socks', packed: true },
-  { id: 1, title: 'Travel journal', packed: false },
-  { id: 2, title: 'Watercolors', packed: false },
-];
+  { id: 0, title: 'Тёплые носки', packed: true },
+  { id: 1, title: 'Туристический журнал', packed: false },
+  { id: 2, title: 'Акварель', packed: false },
+];;
 
 export default function TravelPlan() {
   const [items, setItems] = useState(initialItems);
@@ -2225,7 +2225,7 @@ export default function TravelPlan() {
         onDeleteItem={handleDeleteItem}
       />
       <hr />
-      <b>{packed} out of {total} packed!</b>
+      <b>{packed} из {total} упаковано!</b>
     </>
   );
 }
@@ -2239,14 +2239,14 @@ export default function AddItem({ onAddItem }) {
   return (
     <>
       <input
-        placeholder="Add item"
+        placeholder="Добавить пункт"
         value={title}
         onChange={e => setTitle(e.target.value)}
       />
       <button onClick={() => {
         setTitle('');
         onAddItem(title);
-      }}>Add</button>
+      }}>Добавить</button>
     </>
   )
 }
@@ -2279,7 +2279,7 @@ export default function PackingList({
             {item.title}
           </label>
           <button onClick={() => onDeleteItem(item.id)}>
-            Delete
+            Удалить
           </button>
         </li>
       ))}
@@ -2296,7 +2296,7 @@ ul, li { margin: 0; padding: 0; }
 
 </Sandpack>
 
-Notice how the event handlers are only concerned with calling `setItems` after this change. The item counts are now calculated during the next render from `items`, so they are always up-to-date.
+Обратите внимание, что обработчики событий теперь только вызывают `setItems` после этого изменения. Количество элементов теперь вычисляется во время следующего рендера на основе items, поэтому они всегда актуальны.
 
 </Solution>
 
