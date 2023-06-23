@@ -2300,11 +2300,11 @@ ul, li { margin: 0; padding: 0; }
 
 </Solution>
 
-#### Fix the disappearing selection {/*fix-the-disappearing-selection*/}
+#### Исправьте исчезающее выделение {/*fix-the-disappearing-selection*/}
 
-There is a list of `letters` in state. When you hover or focus a particular letter, it gets highlighted. The currently highlighted letter is stored in the `highlightedLetter` state variable. You can "star" and "unstar" individual letters, which updates the `letters` array in state.
+Есть список `letters` в состоянии компонента. Когда вы наводите курсор или фокусируетесь на определенном сообщении, оно подсвечивается. Текущее подсвеченное сообщение хранится в переменной состояния `highlightedLetter`. Вы можете "пометить" или "снять пометку" с отдельных сообщений, что обновляет массив `letters` в состоянии.
 
-This code works, but there is a minor UI glitch. When you press "Star" or "Unstar", the highlighting disappears for a moment. However, it reappears as soon as you move your pointer or switch to another letter with keyboard. Why is this happening? Fix it so that the highlighting doesn't disappear after the button click.
+Этот код работает, но есть небольшой недочет в UI. При нажатии кнопки "Пометить" или "Снять пометку" подсветка на мгновение исчезает. Однако она снова появляется, как только вы перемещаете указатель мыши или переключаетесь на другое сообщение с помощью клавиатуры. Почему это происходит? Исправьте это, чтобы подсветка не исчезала после нажатия кнопки.
 
 <Sandpack>
 
@@ -2336,7 +2336,7 @@ export default function MailClient() {
 
   return (
     <>
-      <h2>Inbox</h2>
+      <h2>Входящие сообщения</h2>
       <ul>
         {letters.map(letter => (
           <Letter
@@ -2377,7 +2377,7 @@ export default function Letter({
       <button onClick={() => {
         onToggleStar(letter);
       }}>
-        {letter.isStarred ? 'Unstar' : 'Star'}
+        {letter.isStarred ? 'Снять пометку' : 'Пометить'}
       </button>
       {letter.subject}
     </li>
@@ -2388,15 +2388,15 @@ export default function Letter({
 ```js data.js
 export const initialLetters = [{
   id: 0,
-  subject: 'Ready for adventure?',
+  subject: 'Готовы к приключениям?',
   isStarred: true,
 }, {
   id: 1,
-  subject: 'Time to check in!',
+  subject: 'Время зарегистрироваться!',
   isStarred: false,
 }, {
   id: 2,
-  subject: 'Festival Begins in Just SEVEN Days!',
+  subject: 'Фестиваль начнется всего через СЕМЬ дней!',
   isStarred: false,
 }];
 ```
@@ -2411,9 +2411,9 @@ li { border-radius: 5px; }
 
 <Solution>
 
-The problem is that you're holding the letter object in `highlightedLetter`. But you're also holding the same information in the `letters` array. So your state has duplication! When you update the `letters` array after the button click, you create a new letter object which is different from `highlightedLetter`. This is why `highlightedLetter === letter` check becomes `false`, and the highlight disappears. It reappears the next time you call `setHighlightedLetter` when the pointer moves.
+Проблема заключается в том, что вы храните объект сообщения в переменной `highlightedMessage`. Но вы также храните ту же информацию в массиве `letters`. Таким образом, ваше состояние содержит дублирование! При обновлении массива `letters` после нажатия кнопки вы создаете новый объект сообщения, который отличается от `highlightedMessage`. Поэтому проверка `highlightedMessage === letter` становится `false`, и подсветка исчезает. Она снова появляется, когда вызывается `setHighlightedMessage` при перемещении указателя.
 
-To fix the issue, remove the duplication from state. Instead of storing *the letter itself* in two places, store the `highlightedId` instead. Then you can check `isHighlighted` for each letter with `letter.id === highlightedId`, which will work even if the `letter` object has changed since the last render.
+Чтобы исправить проблему, удалите дублирование из состояния. Вместо хранения самого сообщения в двух местах, храните `highlightedId`. Затем вы можете проверить `isHighlighted` для каждого сообщения с помощью `letter.id === highlightedId`, что будет работать даже в том случае, если объект `letter` изменился с момента последнего рендера.
 
 <Sandpack>
 
@@ -2445,7 +2445,7 @@ export default function MailClient() {
 
   return (
     <>
-      <h2>Inbox</h2>
+      <h2>Входящие сообщения</h2>
       <ul>
         {letters.map(letter => (
           <Letter
@@ -2486,7 +2486,7 @@ export default function Letter({
       <button onClick={() => {
         onToggleStar(letter.id);
       }}>
-        {letter.isStarred ? 'Unstar' : 'Star'}
+        {letter.isStarred ? 'Снять пометку' : 'Пометить'}
       </button>
       {letter.subject}
     </li>
@@ -2497,15 +2497,15 @@ export default function Letter({
 ```js data.js
 export const initialLetters = [{
   id: 0,
-  subject: 'Ready for adventure?',
+  subject: 'Готовы к приключениям?',
   isStarred: true,
 }, {
   id: 1,
-  subject: 'Time to check in!',
+  subject: 'Время зарегистрироваться!',
   isStarred: false,
 }, {
   id: 2,
-  subject: 'Festival Begins in Just SEVEN Days!',
+  subject: 'Фестиваль начнется всего через СЕМЬ дней!',
   isStarred: false,
 }];
 ```
