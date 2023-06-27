@@ -2302,9 +2302,9 @@ ul, li { margin: 0; padding: 0; }
 
 #### Исправьте исчезающее выделение {/*fix-the-disappearing-selection*/}
 
-Есть список `letters` в состоянии компонента. Когда вы наводите курсор или фокусируетесь на определённом сообщении, оно подсвечивается. Текущее подсвеченное сообщение хранится в переменной состояния `highlightedLetter`. Вы можете "пометить" или "снять пометку" с отдельных сообщений, что обновляет массив `letters` в состоянии.
+Есть список `letters` в состоянии компонента. Когда вы наводите курсор или фокусируетесь на определённом письме, оно подсвечивается. Текущее подсвеченное письмо хранится в переменной состояния `highlightedLetter`. Вы можете "пометить" или "снять пометку" с отдельных писем, что обновляет массив `letters` в состоянии.
 
-Этот код работает, но есть небольшой недочёт в UI. При нажатии кнопки "Пометить" или "Снять пометку" подсветка на мгновение исчезает. Однако она снова появляется, как только вы перемещаете указатель мыши или переключаетесь на другое сообщение с помощью клавиатуры. Почему это происходит? Исправьте это, чтобы подсветка не исчезала после нажатия кнопки.
+Этот код работает, но есть небольшой недочёт в UI. При нажатии кнопки "Пометить" или "Снять пометку" подсветка на мгновение исчезает. Однако она снова появляется, как только вы перемещаете указатель мыши или переключаетесь на другое письмо с помощью клавиатуры. Почему это происходит? Исправьте это, чтобы подсветка не исчезала после нажатия кнопки.
 
 <Sandpack>
 
@@ -2336,7 +2336,7 @@ export default function MailClient() {
 
   return (
     <>
-      <h2>Входящие сообщения</h2>
+      <h2>Входящие письма</h2>
       <ul>
         {letters.map(letter => (
           <Letter
@@ -2411,9 +2411,9 @@ li { border-radius: 5px; }
 
 <Solution>
 
-Проблема заключается в том, что вы храните объект сообщения в переменной `highlightedMessage`. Но вы также храните ту же информацию в массиве `letters`. Таким образом, ваше состояние содержит дублирование! При обновлении массива `letters` после нажатия кнопки вы создаёте новый объект сообщения, который отличается от `highlightedMessage`. Поэтому проверка `highlightedMessage === letter` становится `false`, и подсветка исчезает. Она снова появляется, когда вызывается `setHighlightedMessage` при перемещении указателя.
+Проблема заключается в том, что вы храните объект письма в переменной `highlightedMessage`. Но вы также храните ту же информацию в массиве `letters`. Таким образом, ваше состояние содержит дублирование! При обновлении массива `letters` после нажатия кнопки вы создаёте новый объект письма, который отличается от `highlightedMessage`. Поэтому проверка `highlightedMessage === letter` становится `false`, и подсветка исчезает. Она снова появляется, когда вызывается `setHighlightedMessage` при перемещении указателя.
 
-Чтобы исправить проблему, удалите дублирование из состояния. Вместо хранения самого сообщения в двух местах, храните `highlightedId`. Затем вы можете проверить `isHighlighted` для каждого сообщения с помощью `letter.id === highlightedId`, что будет работать даже в том случае, если объект `letter` изменился с момента последнего рендера.
+Чтобы исправить проблему, удалите дублирование из состояния. Вместо хранения самого письма в двух местах, храните `highlightedId`. Затем вы можете проверить `isHighlighted` для каждого письма с помощью `letter.id === highlightedId`, что будет работать даже в том случае, если объект `letter` изменился с момента последнего рендера.
 
 <Sandpack>
 
@@ -2445,7 +2445,7 @@ export default function MailClient() {
 
   return (
     <>
-      <h2>Входящие сообщения</h2>
+      <h2>Входящие письма</h2>
       <ul>
         {letters.map(letter => (
           <Letter
@@ -2520,15 +2520,15 @@ li { border-radius: 5px; }
 
 </Solution>
 
-#### Implement multiple selection {/*implement-multiple-selection*/}
+#### Реализуйте множественный выбор {/*implement-multiple-selection*/}
 
-In this example, each `Letter` has an `isSelected` prop and an `onToggle` handler that marks it as selected. This works, but the state is stored as a `selectedId` (either `null` or an ID), so only one letter can get selected at any given time.
+В этом примере каждое `Letter` имеет свойство `isSelected` и обработчик `onToggle`, который отмечает его как выбранное. Это работает, но состояние хранится как `selectedId` (либо `null`, либо ID), поэтому только одно письмо может быть выбрано в данный момент.
 
-Change the state structure to support multiple selection. (How would you structure it? Think about this before writing the code.) Each checkbox should become independent from the others. Clicking a selected letter should uncheck it. Finally, the footer should show the correct number of the selected items.
+Измените структуру состояния для поддержки множественного выбора. (Как бы вы её структурировали? Подумайте об этом перед написанием кода.) Каждый флажок должен быть независимым от остальных. Клик по выбранному письму должен снимать выбор. Наконец, нижний колонтитул должен показывать правильное количество выбранных элементов.
 
 <Hint>
 
-Instead of a single selected ID, you might want to hold an array or a [Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set) of selected IDs in state.
+Вместо одного выбранного идентификатора вы можете хранить массив или [Set](https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Set) выбранных ID в состоянии.
 
 </Hint>
 
@@ -2542,24 +2542,24 @@ import Letter from './Letter.js';
 export default function MailClient() {
   const [selectedId, setSelectedId] = useState(null);
 
-  // TODO: allow multiple selection
+  // TODO: разрешить множественный выбор
   const selectedCount = 1;
 
   function handleToggle(toggledId) {
-    // TODO: allow multiple selection
+    // TODO: разрешить множественный выбор
     setSelectedId(toggledId);
   }
 
   return (
     <>
-      <h2>Inbox</h2>
+      <h2>Входящие письма</h2>
       <ul>
         {letters.map(letter => (
           <Letter
             key={letter.id}
             letter={letter}
             isSelected={
-              // TODO: allow multiple selection
+              // TODO: разрешить множественный выбор
               letter.id === selectedId
             }
             onToggle={handleToggle}
@@ -2568,7 +2568,7 @@ export default function MailClient() {
         <hr />
         <p>
           <b>
-            You selected {selectedCount} letters
+            Выбранных писем - {selectedCount}
           </b>
         </p>
       </ul>
@@ -2605,15 +2605,15 @@ export default function Letter({
 ```js data.js
 export const letters = [{
   id: 0,
-  subject: 'Ready for adventure?',
+  subject: 'Готовы к приключениям?',
   isStarred: true,
 }, {
   id: 1,
-  subject: 'Time to check in!',
+  subject: 'Время зарегистрироваться!',
   isStarred: false,
 }, {
   id: 2,
-  subject: 'Festival Begins in Just SEVEN Days!',
+  subject: 'Фестиваль начнётся всего через СЕМЬ дней!',
   isStarred: false,
 }];
 ```
@@ -2631,6 +2631,8 @@ label { width: 100%; padding: 5px; display: inline-block; }
 
 Instead of a single `selectedId`, keep a `selectedIds` *array* in state. For example, if you select the first and the last letter, it would contain `[0, 2]`. When nothing is selected, it would be an empty `[]` array:
 
+Вместо одного `selectedId` храните *массив* `selectedIds` в состоянии. Например, если вы выбираете первое и последнее письмо, массив будет содержать `[0, 2]`. Когда ничего не выбрано, массив будет пустым `[]`:
+
 <Sandpack>
 
 ```js App.js
@@ -2644,14 +2646,14 @@ export default function MailClient() {
   const selectedCount = selectedIds.length;
 
   function handleToggle(toggledId) {
-    // Was it previously selected?
+    // Было ли что-то уже выбрано?
     if (selectedIds.includes(toggledId)) {
-      // Then remove this ID from the array.
+      // Удалите ID из массива.
       setSelectedIds(selectedIds.filter(id =>
         id !== toggledId
       ));
     } else {
-      // Otherwise, add this ID to the array.
+      // Иначе добавьте ID в массив.
       setSelectedIds([
         ...selectedIds,
         toggledId
@@ -2661,7 +2663,7 @@ export default function MailClient() {
 
   return (
     <>
-      <h2>Inbox</h2>
+      <h2>Входящие письма</h2>
       <ul>
         {letters.map(letter => (
           <Letter
@@ -2676,7 +2678,7 @@ export default function MailClient() {
         <hr />
         <p>
           <b>
-            You selected {selectedCount} letters
+             Выбранных писем - {selectedCount}
           </b>
         </p>
       </ul>
@@ -2713,15 +2715,15 @@ export default function Letter({
 ```js data.js
 export const letters = [{
   id: 0,
-  subject: 'Ready for adventure?',
+  subject: 'Готовы к приключениям?',
   isStarred: true,
 }, {
   id: 1,
-  subject: 'Time to check in!',
+  subject: 'Время зарегистрироваться!',
   isStarred: false,
 }, {
   id: 2,
-  subject: 'Festival Begins in Just SEVEN Days!',
+  subject: 'Фестиваль начнётся всего через СЕМЬ дней!',
   isStarred: false,
 }];
 ```
@@ -2735,9 +2737,9 @@ label { width: 100%; padding: 5px; display: inline-block; }
 
 </Sandpack>
 
-One minor downside of using an array is that for each item, you're calling `selectedIds.includes(letter.id)` to check whether it's selected. If the array is very large, this can become a performance problem because array search with [`includes()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes) takes linear time, and you're doing this search for each individual item.
+Одним небольшим недостатком использования массива является то, что для каждого элемента вы вызываете `selectedIds.includes(letter.id)` для проверки, выбран ли он. Если массив очень большой, это может стать проблемой производительности, потому что поиск в массиве с помощью [`includes()`](https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Array/includes) требует линейного времени, и вы выполняете этот поиск для каждого отдельного элемента.
 
-To fix this, you can hold a [Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set) in state instead, which provides a fast [`has()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set/has) operation:
+Чтобы исправить это, вы можете использовать [Set](https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Set) вместо массива в состоянии, что позволит использовать быструю операцию [`has()`](https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Set/has):
 
 <Sandpack>
 
@@ -2754,7 +2756,7 @@ export default function MailClient() {
   const selectedCount = selectedIds.size;
 
   function handleToggle(toggledId) {
-    // Create a copy (to avoid mutation).
+    // Создайте копию (чтобы избежать мутации).
     const nextIds = new Set(selectedIds);
     if (nextIds.has(toggledId)) {
       nextIds.delete(toggledId);
@@ -2766,7 +2768,7 @@ export default function MailClient() {
 
   return (
     <>
-      <h2>Inbox</h2>
+      <h2>Входящие письма</h2>
       <ul>
         {letters.map(letter => (
           <Letter
@@ -2781,7 +2783,7 @@ export default function MailClient() {
         <hr />
         <p>
           <b>
-            You selected {selectedCount} letters
+            Выбранных писем - {selectedCount}
           </b>
         </p>
       </ul>
@@ -2818,15 +2820,15 @@ export default function Letter({
 ```js data.js
 export const letters = [{
   id: 0,
-  subject: 'Ready for adventure?',
+  subject: 'Готовы к приключениям?',
   isStarred: true,
 }, {
   id: 1,
-  subject: 'Time to check in!',
+  subject: 'Время зарегистрироваться!',
   isStarred: false,
 }, {
   id: 2,
-  subject: 'Festival Begins in Just SEVEN Days!',
+  subject: 'Фестиваль начнётся всего через СЕМЬ дней!',
   isStarred: false,
 }];
 ```
@@ -2840,9 +2842,9 @@ label { width: 100%; padding: 5px; display: inline-block; }
 
 </Sandpack>
 
-Now each item does a `selectedIds.has(letter.id)` check, which is very fast.
+Теперь каждый элемент выполняет проверку `selectedIds.has(letter.id)`, которая является очень быстрой.
 
-Keep in mind that you [should not mutate objects in state](/learn/updating-objects-in-state), and that includes Sets, too. This is why the `handleToggle` function creates a *copy* of the Set first, and then updates that copy.
+Не забывайте, что [нельзя изменять объекты в состоянии напрямую](/learn/updating-objects-in-state), это также относится к множествам.  Поэтому функция `handleToggle` создаёт *копию* множества и обновляет эту копию.
 
 </Solution>
 
